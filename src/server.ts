@@ -1,34 +1,35 @@
+//Importando o express
 import express, { response } from 'express';
 
-//Devemos trazer não só o código, mas também sua definição de tipo
+//Definindo o express e configurando que recebe em JSON
 const app = express();
-
-//Definimos que é JSON
 app.use(express.json());
 
+//Fazemos um array para utilizarmos nas funções abaixo
 const users =["Renato","Lorran","Erick"];
 
+//Rota get que listará todos os usuários, com uma query opcional de filtro
 app.get('/users', (request, response) => {
 
     const search = String(request.query.search);
-    
-    const filteredUsers = search ? users.filter(user => user.includes(search)) : users;
-    response.json(filteredUsers);
+    const filteredUsers = search != 'undefined' ? users.filter(user => user.includes(search)) : users;
+    response.send(filteredUsers);
 });
 
+//Rota get que lista o usuário específico de acordo com seu ID
 app.get('/users/:id', (request, response) => {
 
     const id = Number(request.params.id);
-
     const user = users[id];
-
     response.json(user);
 });
 
+//Rota de yeehaw
 app.get('/', (request, response) => {
-    response.json({"yee":"haaw"});
+    response.json({"yee":"haw"});
 });
 
+//Rota POST que recebe um nome e e-mail
 app.post('/users', (request,response) => {
     const user = {
         name: request.body.name,
@@ -38,4 +39,5 @@ app.post('/users', (request,response) => {
     return response.json(user);
 });
 
+//Porta que ouviremos
 app.listen(3333);

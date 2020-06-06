@@ -4,22 +4,22 @@ import knex from './database/connection';
 //Permite que eu acople minhas rotas ao nosso arquivo principal
 const routes = express.Router();
 
-//Rota que recupera o usuário do nosso banco de dados, assíncrona
-routes.get('/', async (request, response) => {
+//Rota que retorna todos os usuários
+routes.get('/items', async (request, response) => {
+    //Selecionamos todos os itens
+    const items = await knex('items').select('*');
 
-    //Selecionamos o com o knex e aguardamos os resultados
-    const users = await knex('users').select('*');
-
-    //Loopamos e criamos nossos objetos em JSON
-    const serializedUsers = users.map(user => {
-        return {
-            nome: user.name,
-        };
+    //Serializamos os dados do banco para deixá-los mastigados
+    const serializedItems = items.map(item => {
+        return{
+            name: item.name,
+            //Temos que usar JAPANESE ASPAS por algum motivo
+            image_url: `http://localhost:3333/uploads/${item.image}`,
+        }
     });
-    
-    response.send(serializedUsers);
+
+    response.send(serializedItems);
 });
 
 //Exportamos a rota para dentro do nosso server
-
 export default routes;

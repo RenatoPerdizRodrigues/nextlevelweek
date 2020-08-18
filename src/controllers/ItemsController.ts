@@ -12,7 +12,7 @@ class ItemsController{
         const serializedItems = items.map(item => {
             return{
                 id: item.id,
-                name: item.name,
+                title: item.title,
                 //Temos que usar JAPANESE ASPAS por algum motivo
                 image_url: `http://localhost:3333/uploads/${item.image}`,
             }

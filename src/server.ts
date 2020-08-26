@@ -4,6 +4,7 @@ import express, { response } from 'express';
 import routes from './routes';
 import cors from 'cors';
 import path from 'path';
+import { errors } from 'celebrate';
 
 
 //Definindo o express e configurando que recebe em JSON
@@ -18,5 +19,9 @@ app.use(routes);
 
 //Passamos uma rota estática para recuperarmos imagens
 app.use('/uploads',express.static(path.resolve(__dirname, '..', 'uploads')));
+
+//Erros
+app.use(errors());
+
 //Porta que ouviremos
 app.listen(3333);

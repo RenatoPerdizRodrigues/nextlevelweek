@@ -9,6 +9,8 @@ import api from '../../services/api';
 import './styles.css';
 import logo from '../../assets/logo.svg';
 
+import Dropzone from '../../components/Dropzone';
+
 interface Item {
     id: number,
     title: string,
@@ -37,6 +39,9 @@ const CreatePoint = () => {
 
     //Estado de posição inicial do mapa
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
+
+    //Estado de file
+    const [selectedFile, setSelectedFile] = useState<File>();
 
     //Estado de formulário
     const [formData, setFormData] = useState({
@@ -145,10 +150,25 @@ const CreatePoint = () => {
         const [latitude, longitude] = selectedPosition;
         const items = selectedItems;
 
-        //Montar o array de dados a ser enviado
-        const data = { 
-            name, email, whatsapp, city, latitude, longitude, uf, items
+        //Form multipart
+        const data = new FormData();
+        data.append('name', name);
+        data.append('email', email);
+        data.append('whatsapp', whatsapp);
+        data.append('city', city);
+        data.append('latitude', String(latitude));
+        data.append('longitude', String(longitude));
+        data.append('uf', uf);
+        data.append('items', items.join(','));
+
+        if(selectedFile) {
+            data.append('image', selectedFile);
         }
+
+        //Montar o array de dados a ser enviado
+        // const data = { 
+        //     name, email, whatsapp, city, latitude, longitude, uf, items
+        // }
 
         //Enviamos!
         api.post('points', data);
@@ -170,6 +190,8 @@ const CreatePoint = () => {
 
             <form onSubmit={handleSubmit}>
                 <h1>Cadastro do <br/> Ponto de Coleta</h1>
+
+                <Dropzone onFileUploaded={setSelectedFile} />
 
                 <fieldset>
                     <legend>
